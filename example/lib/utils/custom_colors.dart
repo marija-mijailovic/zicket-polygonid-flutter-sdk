@@ -7,7 +7,7 @@ class CustomColors {
 
   static const Color transparent = Color(0x00000000);
 
-  static const Color primaryButton = Color(0xff8247E5);
+  static const Color primaryButton = Color(0xff3450E4);
 
   static const Color primaryButtonText = Color(0xffFFFFFF);
 
@@ -63,8 +63,8 @@ class CustomColors {
     },
   );
 
-  static const Color claimCardStartColor = Color(0xff7B3FE4);
-  static const Color claimCardEndColor = Color(0xff5D12E1);
+  static const Color claimCardStartColor = Color(0xff3450E4);
+  static const Color claimCardEndColor = Color(0xff3450E4);
 
   static const LinearGradient claimCardBackground = LinearGradient(
     begin: Alignment.topLeft,

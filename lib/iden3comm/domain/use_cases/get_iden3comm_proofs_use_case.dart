@@ -8,12 +8,15 @@ import 'package:polygonid_flutter_sdk/iden3comm/domain/repositories/iden3comm_re
 import 'package:polygonid_flutter_sdk/identity/domain/entities/did_entity.dart';
 import 'package:polygonid_flutter_sdk/identity/domain/use_cases/get_did_use_case.dart';
 import 'package:polygonid_flutter_sdk/proof/domain/use_cases/is_proof_circuit_supported_use_case.dart';
+import 'package:polygonid_flutter_sdk/sdk/credential.dart';
 
+import '../../../common/domain/domain_logger.dart';
 import '../../../credential/domain/entities/claim_entity.dart';
 import '../../../credential/domain/use_cases/get_claim_revocation_status_use_case.dart';
 import '../../../credential/domain/use_cases/update_claim_use_case.dart';
 import '../../../identity/domain/repositories/identity_repository.dart';
 import '../../../proof/domain/entities/circuit_data_entity.dart';
+import '../../../proof/domain/entities/jwz/jwz_proof.dart';
 import '../../../proof/domain/repositories/proof_repository.dart';
 import '../../../proof/domain/use_cases/generate_proof_use_case.dart';
 import 'get_iden3comm_claims_use_case.dart';
@@ -66,54 +69,44 @@ class GetIden3commProofsUseCase
         )
         .then((identity) => identity.publicKey);
 
-    /// We got [ProofRequestEntity], let's find the associated [ClaimEntity]
-    /// and generate [ProofEntity]
     for (ProofRequestEntity request in requests) {
-      if (await _isProofCircuitSupported.execute(
-          param: request.scope.circuitId)) {
-        // Claims
-        await _getIden3commClaimsUseCase
-            .execute(
-                param: GetIden3commClaimsParam(
-                    message: param.message,
-                    did: param.did,
-                    profileNonce: param.profileNonce,
-                    privateKey: param.privateKey))
-            .then((claim) => claim.first)
-            .then((credential) async {
-          String circuitId = request.scope.circuitId;
-          CircuitDataEntity circuitData =
-              await _proofRepository.loadCircuitFiles(circuitId);
+      // Claims
+      ClaimEntity credential = ClaimEntity(
+          id: "1",
+          issuer: "Zicket",
+          did: param.did,
+          state: ClaimState.active,
+          type: "ProofOfHumanity",
+          info: {});
+      logger().i("CREDENTIAL $credential");
+      String circuitId = request.scope.circuitId;
 
-          String? challenge;
-          String? privKey;
-          if (circuitId == "credentialAtomicQuerySigV2OnChain" ||
-              circuitId == "credentialAtomicQueryMTPV2OnChain") {
-            privKey = param.privateKey;
-            challenge = param.challenge;
-          }
+      CircuitDataEntity circuitData =
+          await _proofRepository.loadCircuitFiles(circuitId);
 
-          // Generate proof
-          proofs.add(await _generateProofUseCase
-              .execute(
-                  param: GenerateProofParam(
-                      param.did,
-                      param.profileNonce,
-                      0,
-                      credential,
-                      request.scope,
-                      circuitData,
-                      privKey,
-                      challenge))
-              .then((proof) => JWZProofEntity(
-                  id: request.scope.id,
-                  circuitId: circuitId,
-                  proof: proof.proof,
-                  pubSignals: proof.pubSignals)));
-        }).catchError((error) {
-          throw error;
-        });
-      }
+      String? challenge;
+      String? privKey;
+      privKey = param.privateKey;
+      challenge = param.challenge;
+
+      //logger().i("JWZ PROOF $jwzProof");
+      //proofs.add(jwzProof);
+
+      // Generate proof
+      logger().i("[get_iden3comm proofs use case]");
+      JWZProof proof = await _generateProofUseCase.execute(
+          param: GenerateProofParam(param.did, param.profileNonce, 0,
+              credential, request.scope, circuitData, privKey, challenge));
+      logger().i(proof);
+      // proofs.add(await _generateProofUseCase
+      //     .execute(
+      //         param: GenerateProofParam(param.did, param.profileNonce, 0,
+      //             credential, request.scope, circuitData, privKey, challenge))
+      //     .then((proof) => JWZProofEntity(
+      //         id: request.scope.id,
+      //         circuitId: circuitId,
+      //         proof: proof.proof,
+      //         pubSignals: proof.pubSignals)));
     }
 
     /// If we have requests but didn't get any proofs, we throw

@@ -18,6 +18,7 @@ import 'package:polygonid_flutter_sdk/identity/data/data_sources/rpc_data_source
 import 'package:polygonid_flutter_sdk/identity/data/dtos/hash_dto.dart';
 import 'package:polygonid_flutter_sdk/identity/domain/entities/tree_state_entity.dart';
 import 'package:polygonid_flutter_sdk/proof/data/data_sources/circuits_download_data_source.dart';
+import 'package:polygonid_flutter_sdk/proof/data/dtos/credential_proof_dto.dart';
 import 'package:polygonid_flutter_sdk/proof/data/dtos/node_aux_dto.dart';
 import 'package:polygonid_flutter_sdk/proof/data/mappers/jwz_proof_mapper.dart';
 import 'package:polygonid_flutter_sdk/proof/domain/entities/download_info_entity.dart';
@@ -29,8 +30,11 @@ import 'package:polygonid_flutter_sdk/proof/domain/exceptions/proof_generation_e
 import '../../../common/utils/uint8_list_utils.dart';
 import '../../../iden3comm/data/mappers/gist_proof_mapper.dart'
     as iden3GistProofMapper;
+import '../../../iden3comm/data/mappers/credential_proof_mapper.dart'
+    as iden3CredentialProofMapper;
 import '../../../identity/data/data_sources/remote_identity_data_source.dart';
 import '../../domain/entities/circuit_data_entity.dart';
+import '../../domain/entities/credential_proof_entity.dart';
 import '../../domain/entities/proof_entity.dart';
 import '../../domain/repositories/proof_repository.dart';
 import '../data_sources/lib_pidcore_proof_data_source.dart';
@@ -43,6 +47,7 @@ import '../dtos/proof_dto.dart';
 import '../dtos/witness_param.dart';
 import '../mappers/circuit_type_mapper.dart';
 import '../mappers/gist_proof_mapper.dart';
+import '../mappers/credential_proof_mapper.dart';
 import '../mappers/jwz_mapper.dart';
 
 class ProofRepositoryImpl extends ProofRepository {
@@ -60,31 +65,35 @@ class ProofRepositoryImpl extends ProofRepository {
   final JWZMapper _jwzMapper;
   final AuthProofMapper _authProofMapper;
   final GistProofMapper _gistProofMapper;
+  final CredentialProofMapper _credentialProofMapper;
   final iden3GistProofMapper.GistProofMapper _iden3GistProofMapper;
+  final iden3CredentialProofMapper.CredentialProofMapper
+      _iden3CredentialProofMapper;
 
   // FIXME: those mappers shouldn't be used here as they are part of Credential
   final ClaimMapper _claimMapper;
   final RevocationStatusMapper _revocationStatusMapper;
 
   ProofRepositoryImpl(
-    this._witnessDataSource,
-    this._proverLibDataSource,
-    this._libPolygonIdCoreProofDataSource,
-    this._localProofFilesDataSource,
-    this._proofCircuitDataSource,
-    this._remoteIdentityDataSource,
-    this._localContractFilesDataSource,
-    this._circuitsDownloadDataSource,
-    this._rpcDataSource,
-    this._circuitTypeMapper,
-    this._jwzProofMapper,
-    this._claimMapper,
-    this._revocationStatusMapper,
-    this._jwzMapper,
-    this._authProofMapper,
-    this._gistProofMapper,
-    this._iden3GistProofMapper,
-  );
+      this._witnessDataSource,
+      this._proverLibDataSource,
+      this._libPolygonIdCoreProofDataSource,
+      this._localProofFilesDataSource,
+      this._proofCircuitDataSource,
+      this._remoteIdentityDataSource,
+      this._localContractFilesDataSource,
+      this._circuitsDownloadDataSource,
+      this._rpcDataSource,
+      this._circuitTypeMapper,
+      this._jwzProofMapper,
+      this._claimMapper,
+      this._revocationStatusMapper,
+      this._jwzMapper,
+      this._authProofMapper,
+      this._gistProofMapper,
+      this._credentialProofMapper,
+      this._iden3GistProofMapper,
+      this._iden3CredentialProofMapper);
 
   @override
   Future<CircuitDataEntity> loadCircuitFiles(String circuitId) async {
@@ -105,6 +114,7 @@ class ProofRepositoryImpl extends ProofRepository {
       ProofEntity? incProof,
       ProofEntity? nonRevProof,
       GistProofEntity? gistProof,
+      CredentialProofEntity? credentialProof,
       List<String>? authClaim,
       Map<String, dynamic>? treeState,
       String? challenge,
@@ -113,6 +123,10 @@ class ProofRepositoryImpl extends ProofRepository {
     Map<String, dynamic>? gistProofMap;
     if (gistProof != null) {
       gistProofMap = _iden3GistProofMapper.mapTo(gistProof);
+    }
+    Map<String, dynamic>? credentialProofMap;
+    if (credentialProof != null) {
+      credentialProofMap = _iden3CredentialProofMapper.mapTo(credentialProof);
     }
     Map<String, dynamic>? incProofMap;
     if (incProof != null) {
@@ -189,6 +203,7 @@ class ProofRepositoryImpl extends ProofRepository {
         throw NullProofException(circuitData.circuitId);
       }
 
+      logger().i("PROOD REPOSITORY f: prove $proof");
       return _jwzProofMapper.mapFrom(proof);
     });
   }
@@ -202,6 +217,54 @@ class ProofRepositoryImpl extends ProofRepository {
   @override
   Future<String> encodeJWZ({required JWZEntity jwz}) {
     return Future.value(_jwzMapper.mapFrom(jwz));
+  }
+
+  @override
+  Future<CredentialProofEntity> getCredentialProof(
+      {required String idAsInt, required String contractAddress}) async {
+    logger().i("CALL SC Addr $contractAddress");
+    String credentialProofSC = await _getCredentialProofSC(
+      identifier: idAsInt,
+      contractAddress: contractAddress,
+    );
+
+    String credentialProof =
+        _libPolygonIdCoreProofDataSource.proofFromSC(credentialProofSC);
+
+    // remove all quotes from the string values
+    final credentialProof2 = credentialProof.replaceAll("\"", "");
+
+    // now we add quotes to both keys and Strings values
+    final quotedString =
+        credentialProof2.replaceAllMapped(RegExp(r'\b\w+\b'), (match) {
+      return '"${match.group(0)}"';
+    });
+
+    var credentialProofJson = jsonDecode(quotedString);
+
+    return _credentialProofMapper.mapFrom(CredentialProofDTO(
+        root: credentialProofJson["root"],
+        proof: ProofDTO(
+            existence: credentialProofJson["proof"]["existence"] == "true"
+                ? true
+                : false,
+            siblings: (credentialProofJson["proof"]["siblings"] as List)
+                .map((hash) => HashDTO.fromBigInt(BigInt.parse(hash)))
+                .toList(),
+            nodeAux: credentialProofJson["proof"]["node_aux"] != null
+                ? NodeAuxDTO(
+                    key: credentialProofJson["proof"]["node_aux"]["key"],
+                    value: credentialProofJson["proof"]["node_aux"]["value"])
+                : null)));
+  }
+
+  Future<String> _getCredentialProofSC(
+      {required String identifier, required String contractAddress}) {
+    return _localContractFilesDataSource
+        .loadStateContract(contractAddress)
+        .then((contract) => _rpcDataSource
+            .getCredentialProof(identifier, contract)
+            .catchError((error) => throw FetchGistProofException(error)));
   }
 
   @override
@@ -260,6 +323,7 @@ class ProofRepositoryImpl extends ProofRepository {
       _downloadInfoController.stream;
 
   ///
+  //TODO optimaze this
   @override
   Future<void> initCircuitsDownloadFromServer() async {
     String pathForZipFileTemp =

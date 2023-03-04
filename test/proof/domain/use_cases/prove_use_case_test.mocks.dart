@@ -3,28 +3,30 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i6;
-import 'dart:typed_data' as _i8;
+import 'dart:async' as _i7;
+import 'dart:typed_data' as _i9;
 
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:polygonid_flutter_sdk/credential/domain/entities/claim_entity.dart'
-    as _i9;
-import 'package:polygonid_flutter_sdk/iden3comm/domain/entities/request/auth/proof_scope_request.dart'
     as _i10;
+import 'package:polygonid_flutter_sdk/iden3comm/domain/entities/request/auth/proof_scope_request.dart'
+    as _i11;
 import 'package:polygonid_flutter_sdk/proof/domain/entities/circuit_data_entity.dart'
     as _i2;
+import 'package:polygonid_flutter_sdk/proof/domain/entities/credential_proof_entity.dart'
+    as _i5;
 import 'package:polygonid_flutter_sdk/proof/domain/entities/download_info_entity.dart'
-    as _i7;
+    as _i8;
 import 'package:polygonid_flutter_sdk/proof/domain/entities/gist_proof_entity.dart'
     as _i4;
 import 'package:polygonid_flutter_sdk/proof/domain/entities/jwz/jwz.dart'
-    as _i12;
+    as _i13;
 import 'package:polygonid_flutter_sdk/proof/domain/entities/jwz/jwz_proof.dart'
     as _i3;
 import 'package:polygonid_flutter_sdk/proof/domain/entities/proof_entity.dart'
-    as _i11;
+    as _i12;
 import 'package:polygonid_flutter_sdk/proof/domain/repositories/proof_repository.dart'
-    as _i5;
+    as _i6;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -69,56 +71,68 @@ class _FakeGistProofEntity_2 extends _i1.SmartFake
         );
 }
 
+class _FakeCredentialProofEntity_3 extends _i1.SmartFake
+    implements _i5.CredentialProofEntity {
+  _FakeCredentialProofEntity_3(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
 /// A class which mocks [ProofRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockProofRepository extends _i1.Mock implements _i5.ProofRepository {
+class MockProofRepository extends _i1.Mock implements _i6.ProofRepository {
   MockProofRepository() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i6.Stream<_i7.DownloadInfo> get circuitsDownloadInfoStream =>
+  _i7.Stream<_i8.DownloadInfo> get circuitsDownloadInfoStream =>
       (super.noSuchMethod(
         Invocation.getter(#circuitsDownloadInfoStream),
-        returnValue: _i6.Stream<_i7.DownloadInfo>.empty(),
-      ) as _i6.Stream<_i7.DownloadInfo>);
+        returnValue: _i7.Stream<_i8.DownloadInfo>.empty(),
+      ) as _i7.Stream<_i8.DownloadInfo>);
   @override
-  _i6.Future<bool> isCircuitSupported({required String? circuitId}) =>
+  _i7.Future<bool> isCircuitSupported({required String? circuitId}) =>
       (super.noSuchMethod(
         Invocation.method(
           #isCircuitSupported,
           [],
           {#circuitId: circuitId},
         ),
-        returnValue: _i6.Future<bool>.value(false),
-      ) as _i6.Future<bool>);
+        returnValue: _i7.Future<bool>.value(false),
+      ) as _i7.Future<bool>);
   @override
-  _i6.Future<_i2.CircuitDataEntity> loadCircuitFiles(String? circuitId) =>
+  _i7.Future<_i2.CircuitDataEntity> loadCircuitFiles(String? circuitId) =>
       (super.noSuchMethod(
         Invocation.method(
           #loadCircuitFiles,
           [circuitId],
         ),
         returnValue:
-            _i6.Future<_i2.CircuitDataEntity>.value(_FakeCircuitDataEntity_0(
+            _i7.Future<_i2.CircuitDataEntity>.value(_FakeCircuitDataEntity_0(
           this,
           Invocation.method(
             #loadCircuitFiles,
             [circuitId],
           ),
         )),
-      ) as _i6.Future<_i2.CircuitDataEntity>);
+      ) as _i7.Future<_i2.CircuitDataEntity>);
   @override
-  _i6.Future<_i8.Uint8List> calculateAtomicQueryInputs({
+  _i7.Future<_i9.Uint8List> calculateAtomicQueryInputs({
     required String? id,
     required int? profileNonce,
     required int? claimSubjectProfileNonce,
-    required _i9.ClaimEntity? claim,
-    required _i10.ProofScopeRequest? request,
-    _i11.ProofEntity? incProof,
-    _i11.ProofEntity? nonRevProof,
+    required _i10.ClaimEntity? claim,
+    required _i11.ProofScopeRequest? request,
+    _i12.ProofEntity? incProof,
+    _i12.ProofEntity? nonRevProof,
     _i4.GistProofEntity? gistProof,
+    _i5.CredentialProofEntity? credentialProof,
     List<String>? authClaim,
     Map<String, dynamic>? treeState,
     String? challenge,
@@ -137,18 +151,19 @@ class MockProofRepository extends _i1.Mock implements _i5.ProofRepository {
             #incProof: incProof,
             #nonRevProof: nonRevProof,
             #gistProof: gistProof,
+            #credentialProof: credentialProof,
             #authClaim: authClaim,
             #treeState: treeState,
             #challenge: challenge,
             #signature: signature,
           },
         ),
-        returnValue: _i6.Future<_i8.Uint8List>.value(_i8.Uint8List(0)),
-      ) as _i6.Future<_i8.Uint8List>);
+        returnValue: _i7.Future<_i9.Uint8List>.value(_i9.Uint8List(0)),
+      ) as _i7.Future<_i9.Uint8List>);
   @override
-  _i6.Future<_i8.Uint8List> calculateWitness(
+  _i7.Future<_i9.Uint8List> calculateWitness(
     _i2.CircuitDataEntity? circuitData,
-    _i8.Uint8List? atomicQueryInputs,
+    _i9.Uint8List? atomicQueryInputs,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -158,12 +173,12 @@ class MockProofRepository extends _i1.Mock implements _i5.ProofRepository {
             atomicQueryInputs,
           ],
         ),
-        returnValue: _i6.Future<_i8.Uint8List>.value(_i8.Uint8List(0)),
-      ) as _i6.Future<_i8.Uint8List>);
+        returnValue: _i7.Future<_i9.Uint8List>.value(_i9.Uint8List(0)),
+      ) as _i7.Future<_i9.Uint8List>);
   @override
-  _i6.Future<_i3.JWZProof> prove(
+  _i7.Future<_i3.JWZProof> prove(
     _i2.CircuitDataEntity? circuitData,
-    _i8.Uint8List? wtnsBytes,
+    _i9.Uint8List? wtnsBytes,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -173,7 +188,7 @@ class MockProofRepository extends _i1.Mock implements _i5.ProofRepository {
             wtnsBytes,
           ],
         ),
-        returnValue: _i6.Future<_i3.JWZProof>.value(_FakeJWZProof_1(
+        returnValue: _i7.Future<_i3.JWZProof>.value(_FakeJWZProof_1(
           this,
           Invocation.method(
             #prove,
@@ -183,19 +198,19 @@ class MockProofRepository extends _i1.Mock implements _i5.ProofRepository {
             ],
           ),
         )),
-      ) as _i6.Future<_i3.JWZProof>);
+      ) as _i7.Future<_i3.JWZProof>);
   @override
-  _i6.Future<String> encodeJWZ({required _i12.JWZEntity? jwz}) =>
+  _i7.Future<String> encodeJWZ({required _i13.JWZEntity? jwz}) =>
       (super.noSuchMethod(
         Invocation.method(
           #encodeJWZ,
           [],
           {#jwz: jwz},
         ),
-        returnValue: _i6.Future<String>.value(''),
-      ) as _i6.Future<String>);
+        returnValue: _i7.Future<String>.value(''),
+      ) as _i7.Future<String>);
   @override
-  _i6.Future<_i4.GistProofEntity> getGistProof({
+  _i7.Future<_i4.GistProofEntity> getGistProof({
     required String? idAsInt,
     required String? contractAddress,
   }) =>
@@ -209,7 +224,7 @@ class MockProofRepository extends _i1.Mock implements _i5.ProofRepository {
           },
         ),
         returnValue:
-            _i6.Future<_i4.GistProofEntity>.value(_FakeGistProofEntity_2(
+            _i7.Future<_i4.GistProofEntity>.value(_FakeGistProofEntity_2(
           this,
           Invocation.method(
             #getGistProof,
@@ -220,22 +235,49 @@ class MockProofRepository extends _i1.Mock implements _i5.ProofRepository {
             },
           ),
         )),
-      ) as _i6.Future<_i4.GistProofEntity>);
+      ) as _i7.Future<_i4.GistProofEntity>);
   @override
-  _i6.Future<bool> circuitsFilesExist() => (super.noSuchMethod(
+  _i7.Future<_i5.CredentialProofEntity> getCredentialProof({
+    required String? idAsInt,
+    required String? contractAddress,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getCredentialProof,
+          [],
+          {
+            #idAsInt: idAsInt,
+            #contractAddress: contractAddress,
+          },
+        ),
+        returnValue: _i7.Future<_i5.CredentialProofEntity>.value(
+            _FakeCredentialProofEntity_3(
+          this,
+          Invocation.method(
+            #getCredentialProof,
+            [],
+            {
+              #idAsInt: idAsInt,
+              #contractAddress: contractAddress,
+            },
+          ),
+        )),
+      ) as _i7.Future<_i5.CredentialProofEntity>);
+  @override
+  _i7.Future<bool> circuitsFilesExist() => (super.noSuchMethod(
         Invocation.method(
           #circuitsFilesExist,
           [],
         ),
-        returnValue: _i6.Future<bool>.value(false),
-      ) as _i6.Future<bool>);
+        returnValue: _i7.Future<bool>.value(false),
+      ) as _i7.Future<bool>);
   @override
-  _i6.Future<void> initCircuitsDownloadFromServer() => (super.noSuchMethod(
+  _i7.Future<void> initCircuitsDownloadFromServer() => (super.noSuchMethod(
         Invocation.method(
           #initCircuitsDownloadFromServer,
           [],
         ),
-        returnValue: _i6.Future<void>.value(),
-        returnValueForMissingStub: _i6.Future<void>.value(),
-      ) as _i6.Future<void>);
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
 }

@@ -53,8 +53,8 @@ class AuthenticateUseCase extends FutureUseCase<AuthenticateParam, void> {
         privateKey: param.privateKey,
       ));
 
-      String pushUrl =
-          await _getEnvConfigUseCase.execute(param: PolygonIdConfig.pushUrl);
+      // String pushUrl =
+      //     await _getEnvConfigUseCase.execute(param: PolygonIdConfig.pushUrl);
       String blockchain = await _getEnvConfigUseCase.execute(
           param: PolygonIdConfig.networkName);
       String network =
@@ -74,7 +74,7 @@ class AuthenticateUseCase extends FutureUseCase<AuthenticateParam, void> {
           did: param.did,
           request: param.message,
           scope: proofs,
-          pushUrl: pushUrl,
+          //pushUrl: pushUrl,
           pushToken: param.pushToken,
           didIdentifier: didIdentifier,
           packageName: packageName);

@@ -6,5 +6,6 @@ abstract class SdkEnv {
   abstract final String infuraRdpUrl;
   abstract final String infuraApiKey;
   abstract final String idStateContractAddress;
-  abstract final String pushUrl;
+  abstract final String credentialsKey;
+  //abstract final String pushUrl;
 }

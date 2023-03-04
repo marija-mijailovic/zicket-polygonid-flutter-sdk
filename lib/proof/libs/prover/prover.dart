@@ -20,6 +20,7 @@ class ProverLib {
 
   ProverLib();
 
+  //TODO Check this - "zkproof/withnes.wasm", "zkproof/name_final.zkey"
   Future<Map<String, dynamic>?> prove(
       String circuitId, Uint8List zkeyBytes, Uint8List wtnsBytes) async {
     Map<String, dynamic> map = {};

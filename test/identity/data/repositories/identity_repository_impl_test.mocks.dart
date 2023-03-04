@@ -474,6 +474,21 @@ class MockRPCDataSource extends _i1.Mock implements _i18.RPCDataSource {
         returnValue: _i13.Future<String>.value(''),
       ) as _i13.Future<String>);
   @override
+  _i13.Future<String> getCredentialProof(
+    String? id,
+    _i5.DeployedContract? contract,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getCredentialProof,
+          [
+            id,
+            contract,
+          ],
+        ),
+        returnValue: _i13.Future<String>.value(''),
+      ) as _i13.Future<String>);
+  @override
   _i13.Future<String> getGistProof(
     String? id,
     _i5.DeployedContract? gistContract,

@@ -6,9 +6,8 @@ class CustomStrings {
 
   // HOME
   static const String homeDescription =
-      "Generate a new identity or if saved retrieved via PolygonID SDK";
-  static const String homeIdentifierSectionPrefix =
-      "identity.getDidIdentifier()\nIdentifier:";
+      "Generate a new identity or if saved retrieved via Zicket ID Wallet";
+  static const String homeIdentifierSectionPrefix = "Identifier:";
   static const String homeIdentifierSectionPlaceHolder = "Not yet created";
   static const String homeButtonCTA =
       "Create identity\nidentity.createIdentity()";
@@ -24,6 +23,7 @@ class CustomStrings {
   static const String authSuccess = "Authenticated successfully";
 
   // CLAIMS
+  static const String claimsMethod = "Go to your claims";
   static const String claimsTitle = "Claims";
   static const String claimsDescription =
       "Connect with a service to add claims about your identity";

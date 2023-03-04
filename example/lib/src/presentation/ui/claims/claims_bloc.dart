@@ -1,11 +1,16 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:polygonid_flutter_sdk/common/domain/domain_logger.dart';
 import 'package:polygonid_flutter_sdk/common/domain/entities/filter_entity.dart';
 import 'package:polygonid_flutter_sdk/credential/domain/entities/claim_entity.dart';
 import 'package:polygonid_flutter_sdk/credential/domain/exceptions/credential_exceptions.dart';
 import 'package:polygonid_flutter_sdk/iden3comm/domain/entities/iden3_message_entity.dart';
+import 'package:polygonid_flutter_sdk/iden3comm/domain/entities/jwz_proof_entity.dart';
 import 'package:polygonid_flutter_sdk/iden3comm/domain/entities/request/offer/offer_iden3_message_entity.dart';
+import 'package:polygonid_flutter_sdk/identity/data/data_sources/local_contract_files_data_source.dart';
+import 'package:polygonid_flutter_sdk/identity/data/data_sources/rpc_data_source.dart';
+import 'package:polygonid_flutter_sdk/proof/domain/use_cases/prove_use_case.dart';
 import 'package:polygonid_flutter_sdk/sdk/polygon_id_sdk.dart';
 import 'package:polygonid_flutter_sdk_example/src/data/secure_storage.dart';
 import 'package:polygonid_flutter_sdk_example/src/presentation/ui/claims/claims_event.dart';
@@ -304,9 +309,45 @@ class ClaimsBloc extends Bloc<ClaimsEvent, ClaimsState> {
     }
 
     try {
+      String? privateKey =
+          await SecureStorage.read(key: SecureStorageKeys.privateKey);
+
+      if (privateKey == null) {
+        emit(const ClaimsState.error("Private key not found"));
+        return;
+      }
+
+      logger().i("PRIV KEY $privateKey");
+
+      String? did = await _polygonIdSdk.identity.getDidIdentifier(
+        privateKey: privateKey,
+        blockchain: BlockchainResources.blockchain,
+        network: BlockchainResources.network,
+      );
+
+      if (did == null || did.isEmpty) {
+        emit(const ClaimsState.error(
+            "without an identity is impossible to get claims"));
+        return;
+      }
+
+      logger().i("DID $did");
+
       final Iden3MessageEntity iden3message = await _polygonIdSdk.iden3comm
           .getIden3Message(message: qrCodeResponse!);
-      emit(ClaimsState.qrCodeScanned(iden3message));
+
+      logger().i("IDEN# MSG $iden3message");
+
+      /// proverava da li je hash privateKey u stablu 2. hesiranih privateKeyeva (nullifiers i payment)
+      /// i provera da li je isHuman = 1
+      final List<JWZProofEntity> proofEntities = await _polygonIdSdk.iden3comm
+          .getProofs(message: iden3message, did: did, privateKey: privateKey);
+
+      logger().i("VALID $proofEntities");
+      // call smart contract
+      //1. to check that we acctualy send isHuman = 1
+      //2. to check nullifiers
+      //=>one transaction two proof send
     } catch (error) {
       emit(const ClaimsState.error("Scanned code is not valid"));
     }

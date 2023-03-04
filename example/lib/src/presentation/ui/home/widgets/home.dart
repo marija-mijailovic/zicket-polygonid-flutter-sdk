@@ -144,7 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
             CustomStrings.homeButtonRemoveIdentityCTA,
             textAlign: TextAlign.center,
             style: CustomTextStyles.primaryButtonTextStyle.copyWith(
-              color: CustomColors.primaryButton,
+              color: Color.fromARGB(255, 52, 80, 228),
             ),
           ),
         ),
@@ -264,18 +264,18 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   ///
-  Widget _buildSignMessageSection() {
-    return BlocBuilder(
-      bloc: _bloc,
-      builder: (BuildContext context, HomeState state) {
-        if (state.identifier == null || state.identifier!.isEmpty) {
-          return const SizedBox.shrink();
-        }
-        return SignWidget();
-      },
-      buildWhen: (_, currentState) => currentState is LoadedIdentifierHomeState,
-    );
-  }
+  // Widget _buildSignMessageSection() {
+  //   return BlocBuilder(
+  //     bloc: _bloc,
+  //     builder: (BuildContext context, HomeState state) {
+  //       if (state.identifier == null || state.identifier!.isEmpty) {
+  //         return const SizedBox.shrink();
+  //       }
+  //       return SignWidget();
+  //     },
+  //     buildWhen: (_, currentState) => currentState is LoadedIdentifierHomeState,
+  //   );
+  // }
 
   ///
   Widget _buildFeaturesSection() {
@@ -283,35 +283,35 @@ class _HomeScreenState extends State<HomeScreen> {
       shrinkWrap: true,
       physics: const ClampingScrollPhysics(),
       children: [
-        _buildSignMessageFeatureCard(),
+        //_buildSignMessageFeatureCard(),
         _buildAuthenticateFeatureCard(),
-        _buildCheckIdentityValidityFeatureCard(),
-        _buildBackupIdentityFeatureCard(),
-        _buildRestoreIdentityFeatureCard(),
+        //_buildCheckIdentityValidityFeatureCard(),
+        //_buildBackupIdentityFeatureCard(),
+        //_buildRestoreIdentityFeatureCard(),
       ],
     );
   }
 
   ///
-  Widget _buildSignMessageFeatureCard() {
-    return BlocBuilder(
-      bloc: _bloc,
-      builder: (BuildContext context, HomeState state) {
-        bool enabled = (state is! LoadingDataHomeState) &&
-            (state.identifier != null && state.identifier!.isNotEmpty);
-        return FeatureCard(
-          methodName: CustomStrings.signMessageMethod,
-          title: CustomStrings.signMessageTitle,
-          description: CustomStrings.signMessageDescription,
-          onTap: () {
-            Navigator.pushNamed(context, Routes.signMessagePath);
-          },
-          enabled: enabled,
-          disabledReason: CustomStrings.homeFeatureCardDisabledReason,
-        );
-      },
-    );
-  }
+  // Widget _buildSignMessageFeatureCard() {
+  //   return BlocBuilder(
+  //     bloc: _bloc,
+  //     builder: (BuildContext context, HomeState state) {
+  //       bool enabled = (state is! LoadingDataHomeState) &&
+  //           (state.identifier != null && state.identifier!.isNotEmpty);
+  //       return FeatureCard(
+  //         methodName: CustomStrings.signMessageMethod,
+  //         title: CustomStrings.signMessageTitle,
+  //         description: CustomStrings.signMessageDescription,
+  //         onTap: () {
+  //           Navigator.pushNamed(context, Routes.signMessagePath);
+  //         },
+  //         enabled: enabled,
+  //         disabledReason: CustomStrings.homeFeatureCardDisabledReason,
+  //       );
+  //     },
+  //   );
+  // }
 
   ///
   Widget _buildAuthenticateFeatureCard() {
@@ -321,11 +321,11 @@ class _HomeScreenState extends State<HomeScreen> {
         bool enabled = (state is! LoadingDataHomeState) &&
             (state.identifier != null && state.identifier!.isNotEmpty);
         return FeatureCard(
-          methodName: CustomStrings.authenticateMethod,
-          title: CustomStrings.authenticateTitle,
-          description: CustomStrings.authenticateDescription,
+          methodName: CustomStrings.claimsMethod,
+          title: CustomStrings.claimsTitle,
+          description: CustomStrings.claimsDescription,
           onTap: () {
-            Navigator.pushNamed(context, Routes.authPath);
+            Navigator.pushNamed(context, Routes.claimsPath);
           },
           enabled: enabled,
           disabledReason: CustomStrings.homeFeatureCardDisabledReason,
@@ -335,65 +335,65 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   ///
-  Widget _buildCheckIdentityValidityFeatureCard() {
-    return BlocBuilder(
-      bloc: _bloc,
-      builder: (BuildContext context, HomeState state) {
-        bool enabled = (state is! LoadingDataHomeState) &&
-            (state.identifier != null && state.identifier!.isNotEmpty);
-        return FeatureCard(
-          methodName: CustomStrings.checkIdentityValidityMethod,
-          title: CustomStrings.checkIdentityValidityTitle,
-          description: CustomStrings.checkIdentityValidityDescription,
-          onTap: () {
-            Navigator.pushNamed(context, Routes.checkIdentityValidityPath);
-          },
-          enabled: enabled,
-          disabledReason: CustomStrings.homeFeatureCardDisabledReason,
-        );
-      },
-    );
-  }
+  // Widget _buildCheckIdentityValidityFeatureCard() {
+  //   return BlocBuilder(
+  //     bloc: _bloc,
+  //     builder: (BuildContext context, HomeState state) {
+  //       bool enabled = (state is! LoadingDataHomeState) &&
+  //           (state.identifier != null && state.identifier!.isNotEmpty);
+  //       return FeatureCard(
+  //         methodName: CustomStrings.checkIdentityValidityMethod,
+  //         title: CustomStrings.checkIdentityValidityTitle,
+  //         description: CustomStrings.checkIdentityValidityDescription,
+  //         onTap: () {
+  //           Navigator.pushNamed(context, Routes.checkIdentityValidityPath);
+  //         },
+  //         enabled: enabled,
+  //         disabledReason: CustomStrings.homeFeatureCardDisabledReason,
+  //       );
+  //     },
+  //   );
+  // }
 
   ///
-  Widget _buildBackupIdentityFeatureCard() {
-    return BlocBuilder(
-      bloc: _bloc,
-      builder: (BuildContext context, HomeState state) {
-        bool enabled = (state is! LoadingDataHomeState) &&
-            (state.identifier != null && state.identifier!.isNotEmpty);
-        return FeatureCard(
-          methodName: CustomStrings.backupIdentityMethod,
-          title: CustomStrings.backupIdentityTitle,
-          description: CustomStrings.backupIdentityDescription,
-          onTap: () {
-            Navigator.pushNamed(context, Routes.backupIdentityPath);
-          },
-          enabled: enabled,
-          disabledReason: CustomStrings.homeFeatureCardDisabledReason,
-        );
-      },
-    );
-  }
+  // Widget _buildBackupIdentityFeatureCard() {
+  //   return BlocBuilder(
+  //     bloc: _bloc,
+  //     builder: (BuildContext context, HomeState state) {
+  //       bool enabled = (state is! LoadingDataHomeState) &&
+  //           (state.identifier != null && state.identifier!.isNotEmpty);
+  //       return FeatureCard(
+  //         methodName: CustomStrings.backupIdentityMethod,
+  //         title: CustomStrings.backupIdentityTitle,
+  //         description: CustomStrings.backupIdentityDescription,
+  //         onTap: () {
+  //           Navigator.pushNamed(context, Routes.backupIdentityPath);
+  //         },
+  //         enabled: enabled,
+  //         disabledReason: CustomStrings.homeFeatureCardDisabledReason,
+  //       );
+  //     },
+  //   );
+  // }
 
   ///
-  Widget _buildRestoreIdentityFeatureCard() {
-    return BlocBuilder(
-      bloc: _bloc,
-      builder: (BuildContext context, HomeState state) {
-        bool enabled = (state is! LoadingDataHomeState) &&
-            (state.identifier != null && state.identifier!.isNotEmpty);
-        return FeatureCard(
-          methodName: CustomStrings.restoreIdentityMethod,
-          title: CustomStrings.restoreIdentityTitle,
-          description: CustomStrings.restoreIdentityDescription,
-          onTap: () {
-            Navigator.pushNamed(context, Routes.restoreIdentityPath);
-          },
-          enabled: enabled,
-          disabledReason: CustomStrings.homeFeatureCardDisabledReason,
-        );
-      },
-    );
-  }
+  // Widget _buildRestoreIdentityFeatureCard() {
+  //   return BlocBuilder(
+  //     bloc: _bloc,
+  //     builder: (BuildContext context, HomeState state) {
+  //       bool enabled = (state is! LoadingDataHomeState) &&
+  //           (state.identifier != null && state.identifier!.isNotEmpty);
+  //       return FeatureCard(
+  //         methodName: CustomStrings.restoreIdentityMethod,
+  //         title: CustomStrings.restoreIdentityTitle,
+  //         description: CustomStrings.restoreIdentityDescription,
+  //         onTap: () {
+  //           Navigator.pushNamed(context, Routes.restoreIdentityPath);
+  //         },
+  //         enabled: enabled,
+  //         disabledReason: CustomStrings.homeFeatureCardDisabledReason,
+  //       );
+  //     },
+  //   );
+  // }
 }

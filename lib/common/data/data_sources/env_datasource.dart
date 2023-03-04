@@ -20,8 +20,11 @@ class EnvDataSource {
         return _sdkEnv.infuraApiKey;
       case PolygonIdConfig.idStateContractAddress:
         return _sdkEnv.idStateContractAddress;
-      case PolygonIdConfig.pushUrl:
-        return _sdkEnv.pushUrl;
+      case PolygonIdConfig.credentialsKey:
+        return _sdkEnv.credentialsKey;
+
+      // case PolygonIdConfig.pushUrl:
+      //   return _sdkEnv.pushUrl;
     }
   }
 }

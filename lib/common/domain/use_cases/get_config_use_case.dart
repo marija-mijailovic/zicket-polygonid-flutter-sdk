@@ -8,7 +8,8 @@ enum PolygonIdConfig {
   infuraRdpUrl,
   infuraApiKey,
   idStateContractAddress,
-  pushUrl,
+  credentialsKey,
+  //pushUrl,
 }
 
 class GetEnvConfigUseCase extends FutureUseCase<PolygonIdConfig, String> {

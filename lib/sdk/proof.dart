@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:archive/archive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:injectable/injectable.dart';
+import 'package:polygonid_flutter_sdk/common/domain/domain_logger.dart';
 import 'package:polygonid_flutter_sdk/credential/domain/entities/claim_entity.dart';
 import 'package:polygonid_flutter_sdk/proof/domain/entities/download_info_entity.dart';
 import 'package:polygonid_flutter_sdk/proof/domain/entities/jwz/jwz_proof.dart';
@@ -50,6 +51,7 @@ class Proof implements PolygonIdSdkProof {
       required ProofScopeRequest request,
       String? privateKey,
       String? challenge}) {
+    logger().i("PROOF prove function");
     return _proveUseCase.execute(
         param: GenerateProofParam(did, profileNonce ?? 0, 0, claim, request,
             circuitData, privateKey, challenge));

@@ -83,22 +83,22 @@ class Iden3commRepositoryImpl extends Iden3commRepository {
     required String did,
     required AuthIden3MessageEntity request,
     required List<JWZProofEntity> scope,
-    String? pushUrl,
+    //String? pushUrl,
     String? pushToken,
     String? didIdentifier,
     String? packageName,
   }) async {
     AuthBodyDidDocResponse? didDocResponse;
-    if (pushUrl != null &&
-        pushUrl.isNotEmpty &&
+    if ( //pushUrl != null &&
+        //pushUrl.isNotEmpty &&
         pushToken != null &&
-        pushToken.isNotEmpty &&
-        didIdentifier != null &&
-        didIdentifier.isNotEmpty &&
-        packageName != null &&
-        packageName.isNotEmpty) {
-      didDocResponse = await _getDidDocResponse(
-          pushUrl, didIdentifier, pushToken, packageName);
+            pushToken.isNotEmpty &&
+            didIdentifier != null &&
+            didIdentifier.isNotEmpty &&
+            packageName != null &&
+            packageName.isNotEmpty) {
+      didDocResponse =
+          await _getDidDocResponse(didIdentifier, pushToken, packageName);
     }
 
     AuthResponse authResponse = AuthResponse(
@@ -117,7 +117,7 @@ class Iden3commRepositoryImpl extends Iden3commRepository {
     return _authResponseMapper.mapFrom(authResponse);
   }
 
-  Future<AuthBodyDidDocResponse> _getDidDocResponse(String pushUrl,
+  Future<AuthBodyDidDocResponse> _getDidDocResponse(
       String didIdentifier, String pushToken, String packageName) async {
     return AuthBodyDidDocResponse(
       context: ["https://www.w3.org/ns/did/v1"],
@@ -126,11 +126,11 @@ class Iden3commRepositoryImpl extends Iden3commRepository {
         AuthBodyDidDocServiceResponse(
           id: "$didIdentifier#push",
           type: "push-notification",
-          serviceEndpoint: pushUrl,
+          serviceEndpoint: "pushUrl",
           metadata: AuthBodyDidDocServiceMetadataResponse(devices: [
             AuthBodyDidDocServiceMetadataDevicesResponse(
               ciphertext:
-                  await _getPushCipherText(pushToken, pushUrl, packageName),
+                  await _getPushCipherText(pushToken, "pushUrl", packageName),
               alg: "RSA-OAEP-512",
             )
           ]),

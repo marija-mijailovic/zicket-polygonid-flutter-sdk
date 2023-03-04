@@ -1,4 +1,5 @@
 import 'package:injectable/injectable.dart';
+import 'package:polygonid_flutter_sdk/common/domain/domain_logger.dart';
 import 'package:polygonid_flutter_sdk/iden3comm/domain/entities/iden3_message_entity.dart';
 import 'package:polygonid_flutter_sdk/iden3comm/domain/entities/jwz_proof_entity.dart';
 import 'package:polygonid_flutter_sdk/iden3comm/domain/entities/request/auth/auth_iden3_message_entity.dart';
@@ -222,6 +223,7 @@ class Iden3comm implements PolygonIdSdkIden3comm {
       int? profileNonce,
       required String privateKey,
       String? challenge}) {
+    logger().i("GET PROOFS $did");
     return _getIden3commProofsUseCase.execute(
         param: GetIden3commProofsParam(
       message: message,

@@ -24,6 +24,9 @@ class ProveUseCase extends FutureUseCase<ProveParam, JWZProof> {
     Uint8List wtnsBytes = await _proofRepository.calculateWitness(
         param.circuitData, param.inputs);
 
+    logger()
+        .i("Withens: $wtnsBytes, param: ${param.circuitData}, ${param.inputs}");
+
     // Generate proof
     return _proofRepository.prove(param.circuitData, wtnsBytes).then((proof) {
       logger().i("[ProveUseCase] proof: $proof");

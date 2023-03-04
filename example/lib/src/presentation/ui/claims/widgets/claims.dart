@@ -13,6 +13,9 @@ import 'package:polygonid_flutter_sdk_example/utils/custom_colors.dart';
 import 'package:polygonid_flutter_sdk_example/utils/custom_strings.dart';
 import 'package:polygonid_flutter_sdk_example/utils/custom_text_styles.dart';
 
+import '../models/claim_detail_model.dart';
+import '../models/claim_model_state.dart';
+
 class ClaimsScreen extends StatefulWidget {
   final ClaimsBloc _bloc;
 
@@ -199,7 +202,25 @@ class _ClaimsScreenState extends State<ClaimsScreen> {
       bloc: widget._bloc,
       builder: (BuildContext context, ClaimsState state) {
         if (state is LoadedDataClaimsState) {
-          List<ClaimModel> claimList = state.claimList;
+          //List<ClaimModel> claimList = state.claimList;
+          List<ClaimModel> claimList = [
+            ClaimModel(
+                id:
+                    "did:polygonid:polygon:mumbai:2qMirpcmc1iiNL4XusXu3CgnNJavLQdeq3ZcZWHmX1",
+                value:
+                    "f153c8db81cbde02aacc538f1b1f8b4dc53f7ec29a42569bae7fbf747a1b1903", //TODO
+                expiration: "2030-12-31T20:25:45-07:00",
+                issuer: "Zicket",
+                type: "ProofOfHumanity",
+                state: ClaimModelState.active,
+                name: "Proof Of Humanity",
+                details: [
+                  ClaimDetailModel(
+                    name: "isHuman",
+                    value: "1",
+                  )
+                ])
+          ];
           List<Widget> claimWidgetList = _buildClaimCardWidgetList(claimList);
           return claimList.isNotEmpty
               ? Column(
