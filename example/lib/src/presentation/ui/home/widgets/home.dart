@@ -134,14 +134,14 @@ class _HomeScreenState extends State<HomeScreen> {
       child: ElevatedButton(
         key: CustomWidgetsKeys.homeScreenButtonRemoveIdentity,
         onPressed: () {
-          _bloc.add(const HomeEvent.removeIdentity());
+          //_bloc.add(const HomeEvent.removeIdentity());
         },
-        style: enabled
-            ? CustomButtonStyle.outlinedPrimaryButtonStyle
-            : CustomButtonStyle.disabledPrimaryButtonStyle,
+        // style: enabled
+        //     ? CustomButtonStyle.outlinedPrimaryButtonStyle
+        //     : CustomButtonStyle.disabledPrimaryButtonStyle,
         child: FittedBox(
           child: Text(
-            CustomStrings.homeButtonRemoveIdentityCTA,
+            "Identity created",
             textAlign: TextAlign.center,
             style: CustomTextStyles.primaryButtonTextStyle.copyWith(
               color: Color.fromARGB(255, 52, 80, 228),

@@ -39,7 +39,7 @@ class GenerateProofParam {
   final CircuitDataEntity circuitData;
 
   /// FIXME: remove nullables
-  final String privateKey;
+  final String? privateKey;
   final String? challenge;
 
   GenerateProofParam(
@@ -124,11 +124,6 @@ class GenerateProofUseCase extends FutureUseCase<GenerateProofParam, JWZProof> {
     //gistProof = await _getGistProofUseCase.execute(param: param.did);
 
     logger().i("GENERATE PROOF PARAMS $param");
-    var bytes = utf8.encode(param.privateKey); // data being hashed
-
-    String digestPrivateKey = sha256.convert(bytes).toString();
-
-    logger().i("HASHED: $digestPrivateKey");
 
     credentialProof =
         await _getCredentialProofUseCase.execute(param: param.did);

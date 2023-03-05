@@ -62,8 +62,8 @@ import '../../iden3comm/data/data_sources/remote_iden3comm_data_source.dart'
 import '../../iden3comm/data/mappers/auth_inputs_mapper.dart' as _i4;
 import '../../iden3comm/data/mappers/auth_proof_mapper.dart' as _i72;
 import '../../iden3comm/data/mappers/auth_response_mapper.dart' as _i5;
-import '../../iden3comm/data/mappers/credential_proof_mapper.dart' as _i76;
-import '../../iden3comm/data/mappers/gist_proof_mapper.dart' as _i78;
+import '../../iden3comm/data/mappers/credential_proof_mapper.dart' as _i75;
+import '../../iden3comm/data/mappers/gist_proof_mapper.dart' as _i79;
 import '../../iden3comm/data/mappers/proof_request_filters_mapper.dart' as _i50;
 import '../../iden3comm/data/repositories/iden3comm_credential_repository_impl.dart'
     as _i80;
@@ -187,8 +187,8 @@ import '../../proof/data/data_sources/proof_circuit_data_source.dart' as _i48;
 import '../../proof/data/data_sources/prover_lib_data_source.dart' as _i52;
 import '../../proof/data/data_sources/witness_data_source.dart' as _i66;
 import '../../proof/data/mappers/circuit_type_mapper.dart' as _i7;
-import '../../proof/data/mappers/credential_proof_mapper.dart' as _i75;
-import '../../proof/data/mappers/gist_proof_mapper.dart' as _i79;
+import '../../proof/data/mappers/credential_proof_mapper.dart' as _i76;
+import '../../proof/data/mappers/gist_proof_mapper.dart' as _i78;
 import '../../proof/data/mappers/jwz_mapper.dart' as _i29;
 import '../../proof/data/mappers/jwz_proof_mapper.dart' as _i30;
 import '../../proof/data/mappers/node_aux_mapper.dart' as _i34;
@@ -350,13 +350,13 @@ _i1.GetIt $initSDKGetIt(
   ) =>
       databaseModule.getCodec(privateKey));
   gh.factory<_i60.StateIdentifierMapper>(() => _i60.StateIdentifierMapper());
-  gh.factory<_i13.StoreRef<String, Map<String, Object?>>>(
-    () => databaseModule.identityStore,
-    instanceName: 'identityStore',
-  );
   gh.factory<_i13.StoreRef<String, dynamic>>(
     () => databaseModule.keyValueStore,
     instanceName: 'keyValueStore',
+  );
+  gh.factory<_i13.StoreRef<String, Map<String, Object?>>>(
+    () => databaseModule.identityStore,
+    instanceName: 'identityStore',
   );
   gh.factory<String>(
     () => sdk.accessMessage,
@@ -389,14 +389,14 @@ _i1.GetIt $initSDKGetIt(
       get<Map<String, _i13.StoreRef<String, Map<String, Object?>>>>(
           instanceName: 'securedStore')));
   gh.factory<_i75.CredentialProofMapper>(
-      () => _i75.CredentialProofMapper(get<_i49.ProofMapper>()));
+      () => _i75.CredentialProofMapper(get<_i24.HashMapper>()));
   gh.factory<_i76.CredentialProofMapper>(
-      () => _i76.CredentialProofMapper(get<_i24.HashMapper>()));
+      () => _i76.CredentialProofMapper(get<_i49.ProofMapper>()));
   gh.factory<_i77.EnvDataSource>(() => _i77.EnvDataSource(get<_i59.SdkEnv>()));
   gh.factory<_i78.GistProofMapper>(
-      () => _i78.GistProofMapper(get<_i24.HashMapper>()));
+      () => _i78.GistProofMapper(get<_i49.ProofMapper>()));
   gh.factory<_i79.GistProofMapper>(
-      () => _i79.GistProofMapper(get<_i49.ProofMapper>()));
+      () => _i79.GistProofMapper(get<_i24.HashMapper>()));
   gh.factory<_i80.Iden3commCredentialRepositoryImpl>(
       () => _i80.Iden3commCredentialRepositoryImpl(
             get<_i55.RemoteIden3commDataSource>(),
@@ -481,7 +481,7 @@ _i1.GetIt $initSDKGetIt(
         get<_i5.AuthResponseMapper>(),
         get<_i4.AuthInputsMapper>(),
         get<_i72.AuthProofMapper>(),
-        get<_i78.GistProofMapper>(),
+        get<_i79.GistProofMapper>(),
         get<_i53.QMapper>(),
       ));
   gh.factoryAsync<_i98.IdentityRepositoryImpl>(
@@ -522,10 +522,10 @@ _i1.GetIt $initSDKGetIt(
         get<_i57.RevocationStatusMapper>(),
         get<_i29.JWZMapper>(),
         get<_i72.AuthProofMapper>(),
-        get<_i79.GistProofMapper>(),
-        get<_i75.CredentialProofMapper>(),
         get<_i78.GistProofMapper>(),
         get<_i76.CredentialProofMapper>(),
+        get<_i79.GistProofMapper>(),
+        get<_i75.CredentialProofMapper>(),
       ));
   gh.factory<_i100.SMTDataSource>(() => _i100.SMTDataSource(
         get<_i25.HexMapper>(),
